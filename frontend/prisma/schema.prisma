@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  lectures      Lecture[]
+  usage         Usage?
+  subscription  Subscription?
+  messages      ChatMessage[]
+}
+
+model Lecture {
+  id            String    @id @default(cuid())
+  title         String
+  transcript    String?
+  summary       String?
+  status        String    @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  fileUrl       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  notes         Notes[]
+  flashcards    Flashcard[]
+  quizzes       Quiz[]
+  embeddings    Embedding[]
+  chatMessages  ChatMessage[]
+}
+
+model Notes {
+  id          String   @id @default(cuid())
+  content     String
+  createdAt   DateTime @default(now())
+  
+  lectureId   String
+  lecture     Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+}
+
+model Flashcard {
+  id          String   @id @default(cuid())
+  front       String
+  back        String
+  createdAt   DateTime @default(now())
+  
+  lectureId   String
+  lecture     Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+}
+
+model Quiz {
+  id            String   @id @default(cuid())
+  question      String
+  options       String[] // JSON array of strings
+  correctOption Int
+  explanation   String?
+  createdAt     DateTime @default(now())
+  
+  lectureId     String
+  lecture       Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  role        String   // "user" or "assistant"
+  content     String
+  createdAt   DateTime @default(now())
+  
+  lectureId   String
+  lecture     Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Usage {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  aiMessagesToday   Int      @default(0)
+  uploadsToday      Int      @default(0)
+  lastReset         DateTime @default(now())
+  
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  stripeCustomerId  String?  @unique
+  stripePriceId     String?
+  status            String   @default("inactive") // active, canceled, active_trial
+  currentPeriodEnd  DateTime?
+  
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Embedding {
+  id          String   @id @default(cuid())
+  content     String
+  vector      String   // Usually handled by pgvector or Pinecone. Assuming simple string ref here or mock if Pinecone is external.
+  createdAt   DateTime @default(now())
+  
+  lectureId   String
+  lecture     Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+}

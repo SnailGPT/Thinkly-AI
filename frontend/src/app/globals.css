@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode – Thinkly AI palette */
+    --background: 210 40% 98%; /* #F9FAFB */
+    --foreground: 222 47% 11%;
+
+    --app: 210 40% 98%; /* main page background token */
+    --surface: 0 0% 100%; /* white cards */
+
+    --background-dark: 222 47% 5%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 60%; /* #3B82F6 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 258 90% 66%; /* #8B5CF6 */
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 188 84% 56%; /* #22D3EE */
+    --accent-foreground: 210 40% 98%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 26% 89%;
+    --input: 210 26% 89%;
+    --ring: 217 91% 60%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --app: 222 47% 6%;
+    --surface: 222 47% 10%;
+    --background-dark: 222 47% 6%;
+
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 6%;
+
+    --secondary: 258 90% 66%;
+    --secondary-foreground: 222 47% 6%;
+
+    --accent: 188 84% 56%;
+    --accent-foreground: 222 47% 6%;
+
+    --muted: 222 16% 18%;
+    --muted-foreground: 215 20% 65%;
+
+    --destructive: 0 62% 35%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 222 18% 22%;
+    --input: 222 18% 22%;
+    --ring: 217 91% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* App-level helpers */
+.bg-app {
+  @apply bg-[hsl(var(--app))];
+}
+
+.bg-surface {
+  @apply bg-[hsl(var(--card))];
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  opacity: 0.5;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1600 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+  z-index: -1;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.card-elevated {
+  @apply rounded-2xl border border-border bg-surface shadow-[0_18px_60px_rgba(15,23,42,0.08)];
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
