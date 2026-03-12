@@ -12,9 +12,7 @@ export async function rateLimit(key: string, limit: number, windowSeconds: numbe
     const windowKey = `rate:${key}:${Math.floor(now / windowSeconds)}`;
 
     const count = await redis.incr(windowKey);
-    if (count === 1) {
-        await redis.expire(windowKey, windowSeconds);
-    }
+    if (count === 1) await redis.expire(windowKey, windowSeconds);
 
     const remaining = Math.max(limit - count, 0);
 

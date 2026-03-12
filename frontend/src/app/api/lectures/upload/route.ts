@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { lectureQueue } from "@/lib/queue";
 import { checkAndIncrementUsage } from "@/lib/usage";
 import pdfParse from "pdf-parse";
 import { rateLimit } from "@/lib/rateLimit";
+import { processLectureJob } from "@/lib/lectureProcessor";
 
 export const runtime = "nodejs";
 
@@ -78,11 +78,10 @@ export async function POST(req: NextRequest) {
         },
     });
 
-    await lectureQueue.add("process", {
-        lectureId: lecture.id,
-        transcript,
-    });
+    // Vercel-compatible: process in-request (serverless) by default.
+    // Optional: swap this to QStash for async background jobs in production.
+    await processLectureJob({ lectureId: lecture.id, transcript });
 
-    return NextResponse.json({ lectureId: lecture.id, status: "queued" });
+    return NextResponse.json({ lectureId: lecture.id, status: "completed" });
 }
 

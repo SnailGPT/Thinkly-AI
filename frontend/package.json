@@ -17,6 +17,8 @@
     "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/typography": "^0.5.19",
+    "@upstash/qstash": "^2.9.0",
+    "@upstash/redis": "^1.36.4",
     "axios": "^1.13.6",
     "bcrypt": "^6.0.0",
     "bullmq": "^5.70.4",
